@@ -1,0 +1,37 @@
+{
+  "name": "tell_me_a_story",
+  "version": "v1.0.0",
+  "description": "Web application displaying calming stories",
+  "license": "MIT",
+  "dependencies": {
+    "react": "~0.14.0",
+    "react-dom": "~0.14.0"
+  },
+  "devDependencies": {
+    "babel-jest": "^9.0.0",
+    "babel-polyfill": "^6.9.1",
+    "babel-preset-es2015": "*",
+    "babel-preset-react": "*",
+    "babelify": "^7.3.0",
+    "browserify": "^13.0.1",
+    "jest-cli": "^12.1.1",
+    "mocha": "^2.4.5",
+    "react-addons-test-utils": "~0.14.0"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "unmockedModulePathPatterns": [
+      "<rootDir>/node_modules/react/",
+      "<rootDir>/node_modules/react-dom/",
+      "<rootDir>/node_modules/react-addons-test-utils/"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "react"
+    ]
+  }
+}

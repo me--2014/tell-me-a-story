@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+<!--
+<link rel="stylesheet" type="text/css" href="{% static 'blog/style.css' %}" />
+-->
+<!--
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.css" />
+-->
+<link rel="stylesheet" type="text/css" href="{% static 'blog/bootstrap.css' %}" />
+<link href='https://fonts.googleapis.com/css?family=Merriweather:300italic' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="{% static 'blog/extra_style.css' %}" />
+
+<!-- Profile provides more detail on icon -->
+<head profile="https://www.w3.org/2005/10/profile">
+    <meta charset="UTF-8">
+    <meta name="keywords" content="story, stories, relaxation, relax, relaxing, soothe, soothing, calm, calming, sleep, bed, bedtime">
+    <meta name="description" content="A collection of beautiful, imaginative, gentle stories to help you relax">
+    <meta name="author" content="Amy Ruffle & Jack Sanderson-Thwaite">
+    <!-- Ensure proper rendering and touch zooming on mobile devices as per guidance at http://getbootstrap.com/css/-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Icon must be certain size and format. Here have used 32X32 px png -->
+    <link rel="icon" href="{% static 'blog/images/logo2_iconsize.png' %}" type="image/png"/>
+    <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body>
+
+    <div class="container">
+
+    {# Header #}
+        <div id="header_top" class="row">
+            <div id="header_left" class="col-xs-9">
+                <a href="{% url 'blog:index' %}"><img src="{% static 'blog/images/logo2.png' %}" alt="Site logo"
+                class="img-responsive"/>
+                </a>
+                <h4>Bedtime stories for grownups</h4>
+            </div>
+            <div id="header_right" class="col-xs-3">
+                <div id="menu">
+                        <ul class="list-unstyled">
+                            <li><a href="{% url 'blog:index' %}">Discover</a></li>
+                            <li><a href="{% url 'blog:about' %}">About</a></li>
+                            <li><a href="{% url 'blog:contact' %}">Contact Us</a></li>
+                        </ul>
+                </div>
+            </div>
+        </div>
+        <div id="header_bottom" class="row">
+            <div class="col-xs-12"><hr /></div>
+        </div>
+
+    {% block main %}
+    {% endblock %}
+
+    {% block footer %}
+        <div id="footer" class="small">
+            <p>Content copyright Jack Sanderson-Thwaite and Amy Ruffle. Code licenced under MIT licence with source available at Github repository</p>
+            <p>Glyphicons from <a href="http://glyphicons.com/">http://glyphicons.com</a> via <a href="http://getbootstrap.com/">Twitter Bootstrap</a></p>
+        </div>
+    {% endblock %}
+
+    </div>
+
+</body>
+
+{% block javascript %}
+{% endblock %}
+
+</html>
