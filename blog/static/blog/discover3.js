@@ -16,16 +16,22 @@ export var App = React.createClass({
                     }
                 },
                 componentWillMount: function() {
-                    $.ajax({
-                        url: '/blog/0/getTaggedStories/',
-                        dataType: 'json',
-                        success: function(data) {
-                            this.setState({startingStoryList: data, currentStoryList: data, featureSpaceStory: data['0']});
-                        }.bind(this),
-                        error: function(xhr, status, err) {
-                            console.error(status, String(err));
-                        }.bind(this)
-                    });
+					$.ajax({
+							url: 'blog/getStories/',
+							data: {
+								tagId: 0,
+								titleText: ""
+							},
+							type: 'GET',
+							dataType: 'json'
+					})
+					.done( (response) => {
+							this.setState({startingStoryList: response, currentStoryList: response, featureSpaceStory: response['0']});
+					})
+					.fail( (xhr, status, err) => {
+							console.error(status, String(err));
+					});
+					
                     this.getTagList();
                 },
                 getTagList: function() {
@@ -41,40 +47,29 @@ export var App = React.createClass({
                     });
                 },
                 filter: function(tag_id, title_text) {
-                    var startingList = this.state.startingStoryList;
-                    var filteredByTagList = startingList;
-                    var filteredByTitleList = [];
-                    $.ajax({
-                        url: '/blog/' + tag_id + '/getTaggedStories/',
-                        dataType: 'json',
-                        success: function(data) {
-                            //Filter by tag
-                            if(tag_id > 0){
-                                filteredByTagList = data;
-                            }
-                            //Filter by title text
-                            if (title_text) {
-                                var searchTerm = title_text.toLowerCase();
-                                for (var story in filteredByTagList) {
-                                    var title = filteredByTagList[story].title.toLowerCase();
-                                    if(title.indexOf(searchTerm) != -1) {
-                                        filteredByTitleList.push({
-                                            id: filteredByTagList[story].id,
-                                            title: filteredByTagList[story].title,
-                                            hook: filteredByTagList[story].hook
-                                        });
-                                    }
-                                }
-                            }
-                            else {
-                                filteredByTitleList = filteredByTagList;
-                            }
-                            this.setState({currentStoryList: filteredByTitleList});
-                        }.bind(this),
-                        error: function(xhr, status, err) {
-                            console.error(status, String(err));
-                        }.bind(this)
-                    });
+					var filteredList = [];
+					if (tag_id > 0 || title_text) {
+						$.ajax({
+							url: 'blog/getStories/',
+							data: {
+								tagId: tag_id,
+								titleText: title_text
+							},
+							type: 'GET',
+							dataType: 'json'
+						})
+						.done( (response) => {
+							filteredList = response;
+							this.setState({currentStoryList: filteredList});
+						})
+						.fail( (xhr, status, err) => {
+							console.error(status, String(err));
+						});
+					}
+					else {
+						filteredList = this.state.startingStoryList;
+						this.setState({currentStoryList: filteredList});
+					}
                 },
                 searchByTag(event){
                     var tag_id = event.target.value;

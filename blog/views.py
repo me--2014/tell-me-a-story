@@ -130,6 +130,57 @@ def taggedStories(request, tag_id):
     response = JsonResponse(stories_dict)
     return response
 
+def getStories(request):
+
+    try:
+        tagId = request.GET['tagId']
+        titleText = request.GET['titleText']
+    except:
+        tagId = '0'
+        titleText = ""
+
+    # Get relevant stories
+    if tagId != '0':
+        taggedStories = Story.objects.filter(tags__id=tagId)
+    else:
+        taggedStories = Story.objects.all()
+    if titleText:
+        storyqueryset = taggedStories.filter(title__icontains=titleText)
+    else:
+        storyqueryset = taggedStories
+
+    # Turn queryset into dict and order by date posted
+    storyqueryset = storyqueryset.values().order_by('-dateposted')
+
+    # Identify user favourites
+    userId = 1 # For now, we only have one user
+    current_user = User.objects.get(id=userId)
+    userfavsqueryset = current_user.favourite_set.all()
+    userfavslist = []
+    for item in userfavsqueryset:
+        userfavslist.append(item.story.id)
+    for story in storyqueryset:
+        if story['id'] in userfavslist:
+            story['is_fav'] = True
+        else:
+            story['is_fav'] = False
+
+    # Split storytext into paragraphs
+    for story in storyqueryset:
+        story_fulltext = story['storytext']
+        paras = story_fulltext.split('\n')
+        for item in paras:
+            if item == '\r':
+                paras.remove('\r')
+        story['storytext'] = paras
+
+    stories_dict = {}
+    counter = 0
+    for story in storyqueryset:
+        stories_dict[counter] = story
+        counter+= 1
+    response = JsonResponse(stories_dict)
+    return response
 
 def getMostRecent(request):
     mostRecentStory = Story.objects.values().order_by('-dateposted')[0]
