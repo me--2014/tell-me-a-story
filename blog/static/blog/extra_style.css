@@ -19,9 +19,30 @@
     padding: 3% 0%;
 }
 
-.tagIcon {
-	background: rgb(200, 200, 200);
-	margin: 0.5%;
+#tag_icon_0 {
+	background-color: rgb(132, 109, 116);
 }
-
-
+#tag_icon_1 {
+	background-color: rgb(211, 201, 206);
+}
+#tag_icon_2 {
+	background-color: rgb(110, 118, 73);
+}
+#tag_icon_3 {
+	background-color: rgb(157, 151, 84);
+}
+#tag_icon_4 {
+	background-color: rgb(228, 153, 105);
+}
+#tag_icon_5 {
+	background-color: rgb(231, 227, 181);
+}
+#tag_icon_6 {
+	background-color: rgb(238, 197, 169);
+}
+#tag_icon_7 {
+	background-color: rgb(180, 168, 81);
+}
+#tag_icon_8 {
+	background-color: rgb(172, 112, 61);
+}

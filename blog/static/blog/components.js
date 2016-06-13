@@ -37,6 +37,8 @@ export var Tagsearch = React.createClass({
 		}
 		tagList.splice(0, 0, {id: 0, name: "see all stories"});
 		var rows = [];
+		var counter=0;
+		var tileIndexes = [];
 		for (var i in tagList) {
 			if(parseInt(i)%3 === 0) {
 				var rowTagList = [];
@@ -47,8 +49,11 @@ export var Tagsearch = React.createClass({
 				for (x = 0; x<y; x++) {
 					var index = x + parseInt(i);
 					rowTagList.push(tagList[index]);
+					tileIndexes.push(counter);
+					counter++;
 				}
-				rows.push(<TagIconRow rowtags={rowTagList} key={i} searchByTag={this.props.searchByTag} />);
+				rows.push(<TagIconRow rowtags={rowTagList} key={i} searchByTag={this.props.searchByTag} tileIndexes={tileIndexes} />);
+				tileIndexes = [];
 			}
 		}
 		
@@ -60,23 +65,6 @@ export var Tagsearch = React.createClass({
 				</div>
 			</div>
 		);
-		
-		
-		/*
-        return(
-            <div className="row">
-                <div className="form-group form-group-lg col-xs-12">
-                    <label for="filteroptions" className="control-label col-xs-4">I want to...</label>
-                    <div className="col-xs-8">
-                        <select name="tagchoice" onChange={this.props.searchByTag} id="filteroptions"
-                        className="form-control" type="text">
-                            {tags}
-                        </select>
-                    </div>
-                </div>
-            </div>
-        )
-		*/
     }
 });
 
@@ -85,7 +73,8 @@ export var TagIconRow = React.createClass({
 		var tagList = this.props.rowtags;
 		var tags = [];
 		for (var i in tagList) {
-			tags.push(<Option key={tagList[i].id} id={tagList[i].id} name={tagList[i].name} searchByTag={this.props.searchByTag}/>);
+			var counter = this.props.tileIndexes[i];
+			tags.push(<Option key={tagList[i].id} id={tagList[i].id} name={tagList[i].name} searchByTag={this.props.searchByTag} counter={counter}/>);
 		}
 		return(
 			<div className="row">
@@ -98,17 +87,12 @@ export var TagIconRow = React.createClass({
 export var Option = React.createClass({
     render: function() {
 		return(
-			<div className="tagIcon col-lg-3" onClick={this.props.searchByTag} key ={this.props.key} id ={this.props.id} name ={this.props.name}>
-				{this.props.name}
+			<div id={"tag_icon_" + this.props.counter} className="col-lg-3">
+				<div onClick={this.props.searchByTag} key ={this.props.key} id ={this.props.id} name ={this.props.name}>
+					{this.props.name}
+				</div>
 			</div>
 		)
-        /*
-		return(
-            <option value={this.props.id}>
-                {this.props.name}
-            </option>
-        )
-		*/
     }
 });
 

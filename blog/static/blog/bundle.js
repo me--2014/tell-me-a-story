@@ -151,6 +151,8 @@ var Tagsearch = exports.Tagsearch = React.createClass({
         }
         tagList.splice(0, 0, { id: 0, name: "see all stories" });
         var rows = [];
+        var counter = 0;
+        var tileIndexes = [];
         for (var i in tagList) {
             if (parseInt(i) % 3 === 0) {
                 var rowTagList = [];
@@ -162,8 +164,11 @@ var Tagsearch = exports.Tagsearch = React.createClass({
                 for (x = 0; x < y; x++) {
                     var index = x + parseInt(i);
                     rowTagList.push(tagList[index]);
+                    tileIndexes.push(counter);
+                    counter++;
                 }
-                rows.push(React.createElement(TagIconRow, { rowtags: rowTagList, key: i, searchByTag: this.props.searchByTag }));
+                rows.push(React.createElement(TagIconRow, { rowtags: rowTagList, key: i, searchByTag: this.props.searchByTag, tileIndexes: tileIndexes }));
+                tileIndexes = [];
             }
         }
 
@@ -207,7 +212,8 @@ var TagIconRow = exports.TagIconRow = React.createClass({
         var tagList = this.props.rowtags;
         var tags = [];
         for (var i in tagList) {
-            tags.push(React.createElement(Option, { key: tagList[i].id, id: tagList[i].id, name: tagList[i].name, searchByTag: this.props.searchByTag }));
+            var counter = this.props.tileIndexes[i];
+            tags.push(React.createElement(Option, { key: tagList[i].id, id: tagList[i].id, name: tagList[i].name, searchByTag: this.props.searchByTag, counter: counter }));
         }
         return React.createElement(
             'div',
@@ -223,8 +229,12 @@ var Option = exports.Option = React.createClass({
     render: function render() {
         return React.createElement(
             'div',
-            { className: 'tagIcon col-lg-3', onClick: this.props.searchByTag, key: this.props.key, id: this.props.id, name: this.props.name },
-            this.props.name
+            { id: "tag_icon_" + this.props.counter, className: 'col-lg-3' },
+            React.createElement(
+                'div',
+                { onClick: this.props.searchByTag, key: this.props.key, id: this.props.id, name: this.props.name },
+                this.props.name
+            )
         );
         /*
         return(
@@ -491,8 +501,6 @@ var App = exports.App = React.createClass({
     searchByTag: function searchByTag(event) {
         var tag_id = event.target.id;
         var title_text = this.state.textInput;
-        console.log("Tag id is: " + tag_id);
-        console.log("Title text is: " + title_text);
         this.filter(tag_id, title_text);
         this.setState({ tagInput: tag_id });
     },

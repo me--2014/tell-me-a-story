@@ -75,8 +75,6 @@ export var App = React.createClass({
                 searchByTag(event){
                     var tag_id = event.target.id;
                     var title_text = this.state.textInput;
-					console.log("Tag id is: " + tag_id);
-					console.log("Title text is: " + title_text);
                     this.filter(tag_id, title_text);
                     this.setState({tagInput: tag_id});
                 },
