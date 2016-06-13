@@ -29,12 +29,40 @@ export var Sidebar = React.createClass({
 
 export var Tagsearch = React.createClass({
     render: function() {
-        var tags = [];
-        var tagList = this.props.tagList;
-        tags.push(<Option key="0" id="0" name="------" />);
-        for (var i in tagList) {
-            tags.push(<Option key={tagList[i].id} id={tagList[i].id} name={tagList[i].name}/>);
-        }
+
+        var tagsObj = this.props.tagList;
+		var tagList = [];
+		for (var obj in tagsObj) {
+			tagList.push({id: tagsObj[obj].id, name: tagsObj[obj].name});
+		}
+		tagList.splice(0, 0, {id: 0, name: "see all stories"});
+		var rows = [];
+		for (var i in tagList) {
+			if(parseInt(i)%3 === 0) {
+				var rowTagList = [];
+				var x = 0, y = 3;
+				if (tagList.length < (parseInt(i)+3) ) {
+					y = tagList.length - parseInt(i);
+				}
+				for (x = 0; x<y; x++) {
+					var index = x + parseInt(i);
+					rowTagList.push(tagList[index]);
+				}
+				rows.push(<TagIconRow rowtags={rowTagList} key={i} searchByTag={this.props.searchByTag} />);
+			}
+		}
+		
+		return(
+			<div>
+				<label for="storytags_grid">I want to...</label>
+				<div id="storytags_grid">
+					{rows}
+				</div>
+			</div>
+		);
+		
+		
+		/*
         return(
             <div className="row">
                 <div className="form-group form-group-lg col-xs-12">
@@ -48,16 +76,39 @@ export var Tagsearch = React.createClass({
                 </div>
             </div>
         )
+		*/
     }
+});
+
+export var TagIconRow = React.createClass({
+	render: function() {
+		var tagList = this.props.rowtags;
+		var tags = [];
+		for (var i in tagList) {
+			tags.push(<Option key={tagList[i].id} id={tagList[i].id} name={tagList[i].name} searchByTag={this.props.searchByTag}/>);
+		}
+		return(
+			<div className="row">
+				{tags}
+			</div>
+		);
+	}
 });
 
 export var Option = React.createClass({
     render: function() {
-        return(
+		return(
+			<div className="tagIcon col-lg-3" onClick={this.props.searchByTag} key ={this.props.key} id ={this.props.id} name ={this.props.name}>
+				{this.props.name}
+			</div>
+		)
+        /*
+		return(
             <option value={this.props.id}>
                 {this.props.name}
             </option>
         )
+		*/
     }
 });
 
