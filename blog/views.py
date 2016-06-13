@@ -24,55 +24,6 @@ class IndexView(generic.ListView):
         }
         return context
 
-
-
-class DetailView(generic.DetailView):
-    template_name = 'blog/detail.html'
-    model = Story
-
-    def get_object(self, queryset=None):
-        object = super(DetailView, self).get_object()
-        story_fulltext = object.storytext
-        paras = story_fulltext.split('\n')
-        for item in paras:
-            if item == '\r':
-                paras.remove('\r')
-        object.storytext = paras
-        return object
-
-    def get_context_data(self, **kwargs):
-        context = super(DetailView, self).get_context_data()
-        context['tag_list'] = Tag.objects.all()
-        context['story_list'] = Story.objects.all()
-        return context
-
-def filter(request):
-    if request.POST['tagchoice'] == '0':
-        return HttpResponseRedirect(reverse('blog:results', args=(0,)))
-    else:
-        try:
-            tag = Tag.objects.get(pk=request.POST['tagchoice'])
-        except(KeyError, Tag.DoesNotExist):
-            return render(request, 'blog/index.html', {
-                'error_message': "You did not choose a valid tag"
-            })
-        else:
-            return HttpResponseRedirect(reverse('blog:results', args=(tag.id,)))
-
-def results(request, tag_id):
-    if tag_id == '0':
-        tagname = 'All'
-        storyqueryset = Story.objects.all()
-    else:
-        tagname = get_object_or_404(Tag, pk=tag_id).name
-        storyqueryset = Story.objects.filter(tags__id=tag_id)
-    context = {
-        'tagname': tagname,
-        'story_list': storyqueryset,
-        'tag_list': Tag.objects.all(),
-    }
-    return render(request, 'blog/results.html', context)
-
 class ContactView(generic.TemplateView):
     template_name = 'blog/contact.html'
 

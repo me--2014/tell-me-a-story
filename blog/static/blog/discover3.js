@@ -6,7 +6,8 @@ export var App = React.createClass({
                 getInitialState: function() {
                     var tagList = [];
                     return{
-                        featureSpaceStory: {},
+                        featureSpaceStoryId: 0,
+						selectedStory: {},
                         tagList: tagList,
                         placeholderText: "Start typing to search",
                         startingStoryList: [],
@@ -26,7 +27,7 @@ export var App = React.createClass({
 							dataType: 'json'
 					})
 					.done( (response) => {
-							this.setState({startingStoryList: response, currentStoryList: response, featureSpaceStory: response['0']});
+							this.setState({startingStoryList: response, currentStoryList: response});
 					})
 					.fail( (xhr, status, err) => {
 							console.error(status, String(err));
@@ -84,12 +85,15 @@ export var App = React.createClass({
                     this.setState({textInput: title_text});
                 },
                 chooseStory(event) {
-                    var chosenStoryId = event.target.id;
+                    this.setState({featureSpaceStoryId: event.target.id});
+					/*
+					var chosenStoryId = event.target.id;
                     for (var index in this.state.startingStoryList){
                         if (this.state.startingStoryList[index].id == chosenStoryId) {
-                            this.setState({featureSpaceStory: this.state.startingStoryList[index]});
+                            this.setState({featureSpaceStoryId: this.state.startingStoryList[index]});
                         }
                     };
+					*/
                 },
                 changeFavStatus(event) {
 
@@ -100,15 +104,14 @@ export var App = React.createClass({
                             var selectedStory = currentStoryList[story];
                         }
                     }
-
                     if(selectedStory.is_fav === false) {
                         selectedStory.is_fav = true;
                     }
                     else{
                         selectedStory.is_fav = false;
                     }
-
                     this.setState({currentStoryList: currentStoryList});
+					
 
                     /*
                     //Update server
@@ -127,6 +130,13 @@ export var App = React.createClass({
 
                 },
                 render: function() {
+					
+					for (var index in this.state.currentStoryList){
+                        if (this.state.currentStoryList[index].id == this.state.featureSpaceStoryId) {
+							this.state.selectedStory = this.state.currentStoryList[index];
+                        }
+                    };
+					
                     return(
                         <div className="row">
                             <components.Sidebar
@@ -139,7 +149,8 @@ export var App = React.createClass({
                                 changeFavStatus = {this.changeFavStatus}
                             />
                             <components.Featurespace
-                                story={this.state.featureSpaceStory}
+                                //story={this.state.featureSpaceStory}
+								story={this.state.selectedStory}
                                 changeFavStatus = {this.changeFavStatus}
                             />
                         </div>
