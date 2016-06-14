@@ -1,5 +1,6 @@
 var React = require('react');
-var components = require('./components');
+var Sidebar = require('./sidebar')
+var Featurespace = require('./featurespace')
 
 export var App = React.createClass({
 
@@ -86,14 +87,6 @@ export var App = React.createClass({
                 },
                 chooseStory(event) {
                     this.setState({featureSpaceStoryId: event.target.id});
-					/*
-					var chosenStoryId = event.target.id;
-                    for (var index in this.state.startingStoryList){
-                        if (this.state.startingStoryList[index].id == chosenStoryId) {
-                            this.setState({featureSpaceStoryId: this.state.startingStoryList[index]});
-                        }
-                    };
-					*/
                 },
                 changeFavStatus(event) {
 
@@ -139,7 +132,7 @@ export var App = React.createClass({
 					
                     return(
                         <div className="row">
-                            <components.Sidebar
+                            <Sidebar.Sidebar
                                 currentStoryList = {this.state.currentStoryList}
                                 searchByTitle = {this.searchByTitle}
                                 searchByTag = {this.searchByTag}
@@ -148,8 +141,7 @@ export var App = React.createClass({
                                 chooseStory = {this.chooseStory}
                                 changeFavStatus = {this.changeFavStatus}
                             />
-                            <components.Featurespace
-                                //story={this.state.featureSpaceStory}
+                            <Featurespace.Featurespace
 								story={this.state.selectedStory}
                                 changeFavStatus = {this.changeFavStatus}
                             />

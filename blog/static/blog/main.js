@@ -1,6 +1,5 @@
-//import Discover from './discover2';
 var ReactDOM = require('react-dom');
-var discover = require('./discover3');
+var discover = require('./discover');
 
 ReactDOM.render(
     <discover.App />,
