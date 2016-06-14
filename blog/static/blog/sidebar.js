@@ -6,6 +6,9 @@ var Results = require('./results')
 
 export var Sidebar = React.createClass({
     render: function() {
+		var tagId = this.props.tagInput;
+		var results_list_class = "tag_" + tagId + "_colour"
+		
         return(
             <div id="side_bar" className="col-xs-4">
                 <div className="row" id="search_tools">
@@ -15,7 +18,7 @@ export var Sidebar = React.createClass({
                     </form>
                 </div>
                 <div className="row" id="list_of_stories">
-                    <div className="col-xs-12">
+                    <div className={"col-xs-12 " + results_list_class}>
                         <Results.Results
                             currentStoryList={this.props.currentStoryList}
                             chooseStory={this.props.chooseStory}

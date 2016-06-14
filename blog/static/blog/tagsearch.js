@@ -26,7 +26,7 @@ export var Tagsearch = React.createClass({
 					tileIndexes.push(counter);
 					counter++;
 				}
-				rows.push(<TagIconRow rowtags={rowTagList} key={i} searchByTag={this.props.searchByTag} tileIndexes={tileIndexes} />);
+				rows.push(<TagIconRow rowtags={rowTagList} key={i} searchByTag={this.props.searchByTag} tileIndexes={tileIndexes}/>);
 				tileIndexes = [];
 			}
 		}
@@ -61,7 +61,7 @@ export var TagIconRow = React.createClass({
 export var Option = React.createClass({
     render: function() {
 		return(
-			<div id={"tag_icon_" + this.props.counter} className="col-lg-3">
+			<div className={"tag_" + this.props.id + "_colour col-lg-3 tile"}>
 				<div onClick={this.props.searchByTag} key ={this.props.key} id ={this.props.id} name ={this.props.name}>
 					{this.props.name}
 				</div>

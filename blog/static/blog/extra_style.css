@@ -11,6 +11,8 @@
     margin: 1% 0%;
     text-align: center;
     background-color: rgb(200, 200, 200);
+	shape-outside: border-box;
+	border-radius: 2%;
 }
 
 #footer {
@@ -19,30 +21,40 @@
     padding: 3% 0%;
 }
 
-#tag_icon_0 {
+h1 {
+	font-family: 'Amatic SC', cursive;
+}
+
+.tile {
+	margin: 3%;
+	shape-outside: border-box;
+	border-radius: 2%;
+}
+
+.tag_0_colour {
 	background-color: rgb(132, 109, 116);
 }
-#tag_icon_1 {
+.tag_5_colour {
 	background-color: rgb(211, 201, 206);
 }
-#tag_icon_2 {
+.tag_6_colour {
 	background-color: rgb(110, 118, 73);
 }
-#tag_icon_3 {
+.tag_7_colour {
 	background-color: rgb(157, 151, 84);
 }
-#tag_icon_4 {
+.tag_8_colour {
 	background-color: rgb(228, 153, 105);
 }
-#tag_icon_5 {
+.tag_9_colour {
 	background-color: rgb(231, 227, 181);
 }
-#tag_icon_6 {
+.tag_10_colour {
 	background-color: rgb(238, 197, 169);
 }
-#tag_icon_7 {
+.tag_11_colour {
 	background-color: rgb(180, 168, 81);
 }
-#tag_icon_8 {
+.tag_12_colour {
 	background-color: rgb(172, 112, 61);
 }

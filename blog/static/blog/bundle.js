@@ -241,7 +241,8 @@ var App = exports.App = React.createClass({
                 tagList: this.state.tagList,
                 placeholderText: this.state.placeholderText,
                 chooseStory: this.chooseStory,
-                changeFavStatus: this.changeFavStatus
+                changeFavStatus: this.changeFavStatus,
+                tagInput: this.state.tagInput
             }),
             React.createElement(Featurespace.Featurespace, {
                 story: this.state.selectedStory,
@@ -438,6 +439,9 @@ var Sidebar = exports.Sidebar = React.createClass({
     displayName: 'Sidebar',
 
     render: function render() {
+        var tagId = this.props.tagInput;
+        var results_list_class = "tag_" + tagId + "_colour";
+
         return React.createElement(
             'div',
             { id: 'side_bar', className: 'col-xs-4' },
@@ -456,7 +460,7 @@ var Sidebar = exports.Sidebar = React.createClass({
                 { className: 'row', id: 'list_of_stories' },
                 React.createElement(
                     'div',
-                    { className: 'col-xs-12' },
+                    { className: "col-xs-12 " + results_list_class },
                     React.createElement(Results.Results, {
                         currentStoryList: this.props.currentStoryList,
                         chooseStory: this.props.chooseStory,
@@ -551,7 +555,7 @@ var Option = exports.Option = React.createClass({
 	render: function render() {
 		return React.createElement(
 			'div',
-			{ id: "tag_icon_" + this.props.counter, className: 'col-lg-3' },
+			{ className: "tag_" + this.props.id + "_colour col-lg-3 tile" },
 			React.createElement(
 				'div',
 				{ onClick: this.props.searchByTag, key: this.props.key, id: this.props.id, name: this.props.name },

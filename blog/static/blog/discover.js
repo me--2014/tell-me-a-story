@@ -140,6 +140,7 @@ export var App = React.createClass({
                                 placeholderText = {this.state.placeholderText}
                                 chooseStory = {this.chooseStory}
                                 changeFavStatus = {this.changeFavStatus}
+								tagInput = {this.state.tagInput}
                             />
                             <Featurespace.Featurespace
 								story={this.state.selectedStory}
