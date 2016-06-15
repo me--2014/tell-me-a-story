@@ -1,7 +1,11 @@
 {
   "name": "tell_me_a_story",
   "version": "v1.0.0",
-  "description": "Web application displaying calming stories",
+  "repository": {
+	"type": "git",
+	"url": "https://github.com/me--2014/tell-me-a-story"
+  },
+  "description": "Web application displaying stories",
   "license": "MIT",
   "dependencies": {
     "react": "~0.14.0",
