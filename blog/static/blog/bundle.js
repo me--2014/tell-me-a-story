@@ -444,13 +444,13 @@ var Sidebar = exports.Sidebar = React.createClass({
 
         return React.createElement(
             'div',
-            { id: 'side_bar', className: 'col-xs-4' },
+            { id: 'side_bar', className: 'col-xs-4 container' },
             React.createElement(
                 'div',
                 { className: 'row', id: 'search_tools' },
                 React.createElement(
                     'form',
-                    { className: 'form-horizontal col-xs-12' },
+                    { className: 'form-horizontal col-xs-12 container' },
                     React.createElement(Tagsearch.Tagsearch, { searchByTag: this.props.searchByTag, tagList: this.props.tagList }),
                     React.createElement(Titlesearch.Titlesearch, { searchByTitle: this.props.searchByTitle, placeholderText: this.props.placeholderText })
                 )
@@ -516,16 +516,28 @@ var Tagsearch = exports.Tagsearch = React.createClass({
 
 		return React.createElement(
 			'div',
-			null,
-			React.createElement(
-				'label',
-				{ 'for': 'storytags_grid' },
-				'I want to...'
-			),
+			{ className: 'row' },
 			React.createElement(
 				'div',
-				{ id: 'storytags_grid' },
-				rows
+				{ className: 'col-lg-12 container' },
+				React.createElement(
+					'div',
+					{ className: 'row' },
+					React.createElement(
+						'label',
+						{ 'for': 'storytags_grid', className: 'col-lg-12' },
+						'I want to...'
+					)
+				),
+				React.createElement(
+					'div',
+					{ id: 'storytags_grid', className: 'row' },
+					React.createElement(
+						'div',
+						{ className: 'col-lg-12 container' },
+						rows
+					)
+				)
 			)
 		);
 	}

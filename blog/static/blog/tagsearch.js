@@ -32,10 +32,16 @@ export var Tagsearch = React.createClass({
 		}
 		
 		return(
-			<div>
-				<label for="storytags_grid">I want to...</label>
-				<div id="storytags_grid">
-					{rows}
+			<div className="row">
+				<div className="col-lg-12 container">
+					<div className="row">
+						<label for="storytags_grid" className="col-lg-12">I want to...</label>
+					</div>
+					<div id="storytags_grid" className="row">
+						<div className="col-lg-12 container">
+							{rows}
+						</div>
+					</div>
 				</div>
 			</div>
 		);
