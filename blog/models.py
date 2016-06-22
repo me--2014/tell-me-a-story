@@ -21,7 +21,7 @@ class Story(models.Model):
     def __str__(self):
         return self.title
 
-class User(models.Model):
+class User(models.Model): # may want to use User from django.contrib.auth.models instead of creating own class
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=255, default="User")
 
