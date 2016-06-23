@@ -125,7 +125,7 @@ var App = exports.App = React.createClass({
         var _this = this;
 
         $.ajax({
-            url: 'blog/getStories/',
+            url: '/getStories/',
             data: {
                 tagId: 0,
                 titleText: ""
@@ -142,7 +142,7 @@ var App = exports.App = React.createClass({
     },
     getTagList: function getTagList() {
         $.ajax({
-            url: '/blog/getTags/',
+            url: '/getTags/',
             dataType: 'json',
             success: function (data) {
                 this.setState({ tagList: data });
@@ -158,7 +158,7 @@ var App = exports.App = React.createClass({
         var filteredList = [];
         if (tag_id > 0 || title_text) {
             $.ajax({
-                url: 'blog/getStories/',
+                url: '/getStories/',
                 data: {
                     tagId: tag_id,
                     titleText: title_text
