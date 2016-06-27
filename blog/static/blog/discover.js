@@ -38,7 +38,7 @@ export var App = React.createClass({
                 },
                 getTagList: function() {
                     $.ajax({
-                        url: '/getTags/',
+						url: '/rest-api/tags/',
                         dataType: 'json',
                         success: function(data) {
                             this.setState({tagList: data});

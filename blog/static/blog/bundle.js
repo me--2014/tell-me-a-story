@@ -142,7 +142,8 @@ var App = exports.App = React.createClass({
     },
     getTagList: function getTagList() {
         $.ajax({
-            url: '/getTags/',
+            //url: '/getTags/',
+            url: '/rest-api/tags/',
             dataType: 'json',
             success: function (data) {
                 this.setState({ tagList: data });
@@ -491,6 +492,7 @@ var Tagsearch = exports.Tagsearch = React.createClass({
 		for (var obj in tagsObj) {
 			tagList.push({ id: tagsObj[obj].id, name: tagsObj[obj].name });
 		}
+
 		tagList.splice(0, 0, { id: 0, name: "see all stories" });
 		var rows = [];
 		var counter = 0;

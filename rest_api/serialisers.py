@@ -10,10 +10,10 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 class StorySerializer(serializers.HyperlinkedModelSerializer):
     tags = serializers.HyperlinkedRelatedField(many=True, view_name='tag-detail', queryset=Tag.objects.all())
+
     class Meta:
         model = Story
         fields = ('id', 'url', 'title', 'hook', 'storytext', 'dateposted', 'wordcount', 'author', 'tags')
-        # add 'url' to fields
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
 

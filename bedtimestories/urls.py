@@ -22,7 +22,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
-router.register(r'stories', views.StoryViewSet)
+router.register(r'stories', views.StoryViewSet, base_name='story')
 router.register(r'tags', views.TagViewSet)
 
 urlpatterns = [
@@ -33,6 +33,3 @@ urlpatterns = [
     #url(r'^rest-api/', include('rest_api.urls')),
     url(r'^', include('blog.urls')),
 ]
-
-
-# urlpatterns = format_suffix_patterns(urlpatterns)

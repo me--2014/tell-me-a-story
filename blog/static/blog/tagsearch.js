@@ -4,11 +4,13 @@ require('./discover');
 export var Tagsearch = React.createClass({
     render: function() {
 
+		
         var tagsObj = this.props.tagList;
 		var tagList = [];
 		for (var obj in tagsObj) {
 			tagList.push({id: tagsObj[obj].id, name: tagsObj[obj].name});
 		}
+		
 		tagList.splice(0, 0, {id: 0, name: "see all stories"});
 		var rows = [];
 		var counter=0;

@@ -157,6 +157,7 @@ def getTags(request):
         tag_list_dict[counter] = tag
         counter += 1
     response = JsonResponse(tag_list_dict)
+    print(unicode(response))
     return response
 
 def toggleFav(request):
