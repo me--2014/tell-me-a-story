@@ -125,7 +125,6 @@ var App = exports.App = React.createClass({
         var _this = this;
 
         $.ajax({
-            //url: '/getStories/',
             url: '/rest-api/stories/',
             data: {
                 tagId: 0,
@@ -165,12 +164,15 @@ var App = exports.App = React.createClass({
         if (tag_id > 0) {
             url = url + 'tag_id=' + tag_id;
         }
+        if (tag_id > 0 && title_text) {
+            url = url + '&';
+        }
         if (title_text) {
             url = url + 'title_text=' + title_text;
         }
         if (tag_id > 0 || title_text) {
             $.ajax({
-                url: '/getStories/',
+                url: url,
                 data: {
                     tagId: tag_id,
                     titleText: title_text
