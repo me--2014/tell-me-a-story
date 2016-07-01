@@ -3,10 +3,15 @@ require('./discover');
 
 export var Featurespace = React.createClass({
     render: function() {
-        var story_text_paras = []
-        for (var para in this.props.story.storytext) {
-            story_text_paras.push(< Para key={para} id={para} text={this.props.story.storytext[para]} />);
-        }
+		
+		var story_for_render = []
+		var fulltext = this.props.story.storytext;
+		if(fulltext) {
+			var text_with_paras = fulltext.split('\n');
+			for (var para in text_with_paras) {
+				story_for_render.push(< Para key={para} id={para} text={text_with_paras[para]} />);
+			}
+		}
         return(
             <div id="featureSpace" className="col-xs-8">
                 <h2>
@@ -32,7 +37,7 @@ export var Featurespace = React.createClass({
                         <span className="glyphicon glyphicon-play" aria-hidden="true"></span>  Play
                     </button>
                 </div>
-                <div>{story_text_paras}</div>
+                <div>{story_for_render}</div>
             </div>
         )
     }

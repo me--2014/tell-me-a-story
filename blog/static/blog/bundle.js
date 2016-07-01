@@ -125,7 +125,8 @@ var App = exports.App = React.createClass({
         var _this = this;
 
         $.ajax({
-            url: '/getStories/',
+            //url: '/getStories/',
+            url: '/rest-api/stories/',
             data: {
                 tagId: 0,
                 titleText: ""
@@ -134,6 +135,7 @@ var App = exports.App = React.createClass({
             dataType: 'json'
         }).done(function (response) {
             _this.setState({ startingStoryList: response, currentStoryList: response });
+            console.log(_this.state.startingStoryList);
         }).fail(function (xhr, status, err) {
             console.error(status, String(err));
         });
@@ -142,7 +144,6 @@ var App = exports.App = React.createClass({
     },
     getTagList: function getTagList() {
         $.ajax({
-            //url: '/getTags/',
             url: '/rest-api/tags/',
             dataType: 'json',
             success: function (data) {
@@ -157,6 +158,16 @@ var App = exports.App = React.createClass({
         var _this2 = this;
 
         var filteredList = [];
+        var url = '/rest-api/stories/';
+        if (tag_id > 0 || title_text) {
+            url = url + '?';
+        }
+        if (tag_id > 0) {
+            url = url + 'tag_id=' + tag_id;
+        }
+        if (title_text) {
+            url = url + 'title_text=' + title_text;
+        }
         if (tag_id > 0 || title_text) {
             $.ajax({
                 url: '/getStories/',
@@ -266,9 +277,14 @@ var Featurespace = exports.Featurespace = React.createClass({
     displayName: 'Featurespace',
 
     render: function render() {
-        var story_text_paras = [];
-        for (var para in this.props.story.storytext) {
-            story_text_paras.push(React.createElement(Para, { key: para, id: para, text: this.props.story.storytext[para] }));
+
+        var story_for_render = [];
+        var fulltext = this.props.story.storytext;
+        if (fulltext) {
+            var text_with_paras = fulltext.split('\n');
+            for (var para in text_with_paras) {
+                story_for_render.push(React.createElement(Para, { key: para, id: para, text: text_with_paras[para] }));
+            }
         }
         return React.createElement(
             'div',
@@ -315,7 +331,7 @@ var Featurespace = exports.Featurespace = React.createClass({
             React.createElement(
                 'div',
                 null,
-                story_text_paras
+                story_for_render
             )
         );
     }

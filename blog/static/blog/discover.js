@@ -19,7 +19,8 @@ export var App = React.createClass({
                 },
                 componentWillMount: function() {
 					$.ajax({
-							url: '/getStories/',
+							//url: '/getStories/',
+							url: '/rest-api/stories/',
 							data: {
 								tagId: 0,
 								titleText: ""
@@ -29,6 +30,7 @@ export var App = React.createClass({
 					})
 					.done( (response) => {
 							this.setState({startingStoryList: response, currentStoryList: response});
+							console.log(this.state.startingStoryList);
 					})
 					.fail( (xhr, status, err) => {
 							console.error(status, String(err));
@@ -50,6 +52,16 @@ export var App = React.createClass({
                 },
                 filter: function(tag_id, title_text) {
 					var filteredList = [];
+					var url = '/rest-api/stories/'
+					if (tag_id > 0 || title_text) {
+						url = url + '?';
+					}
+					if(tag_id > 0) {
+						url = url + 'tag_id=' + tag_id;
+					}
+					if(title_text) {
+						url = url + 'title_text=' + title_text;
+					}
 					if (tag_id > 0 || title_text) {
 						$.ajax({
 							url: '/getStories/',
