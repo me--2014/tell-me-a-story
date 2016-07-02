@@ -118,7 +118,8 @@ var App = exports.App = React.createClass({
             startingStoryList: [],
             currentStoryList: [],
             tagInput: 0,
-            textInput: ""
+            textInput: "",
+            user: 0
         };
     },
     componentWillMount: function componentWillMount() {
@@ -134,7 +135,6 @@ var App = exports.App = React.createClass({
             dataType: 'json'
         }).done(function (response) {
             _this.setState({ startingStoryList: response, currentStoryList: response });
-            console.log(_this.state.startingStoryList);
         }).fail(function (xhr, status, err) {
             console.error(status, String(err));
         });
@@ -156,9 +156,10 @@ var App = exports.App = React.createClass({
     filter: function filter(tag_id, title_text) {
         var _this2 = this;
 
+        var user_id = 1;
         var filteredList = [];
         var url = '/rest-api/stories/';
-        if (tag_id > 0 || title_text) {
+        if (tag_id > 0 || title_text || user_id > 0) {
             url = url + '?';
         }
         if (tag_id > 0) {
@@ -170,7 +171,14 @@ var App = exports.App = React.createClass({
         if (title_text) {
             url = url + 'title_text=' + title_text;
         }
-        if (tag_id > 0 || title_text) {
+        if ((tag_id > 0 || title_text) && user_id) {
+            url = url + '&';
+        }
+        if (user_id > 0) {
+            url = url + 'user_id=' + user_id;
+        }
+
+        if (tag_id > 0 || title_text || user_id > 0) {
             $.ajax({
                 url: url,
                 data: {

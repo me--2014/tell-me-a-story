@@ -14,7 +14,8 @@ export var App = React.createClass({
                         startingStoryList: [],
                         currentStoryList: [],
                         tagInput: 0,
-                        textInput: ""
+                        textInput: "",
+						user: 0
                     }
                 },
                 componentWillMount: function() {
@@ -29,7 +30,6 @@ export var App = React.createClass({
 					})
 					.done( (response) => {
 							this.setState({startingStoryList: response, currentStoryList: response});
-							console.log(this.state.startingStoryList);
 					})
 					.fail( (xhr, status, err) => {
 							console.error(status, String(err));
@@ -50,9 +50,10 @@ export var App = React.createClass({
                     });
                 },
                 filter: function(tag_id, title_text) {
+					var user_id = 1;
 					var filteredList = [];
 					var url = '/rest-api/stories/'
-					if (tag_id > 0 || title_text) {
+					if (tag_id > 0 || title_text || user_id > 0) {
 						url = url + '?';
 					}
 					if(tag_id > 0) {
@@ -64,7 +65,14 @@ export var App = React.createClass({
 					if(title_text) {
 						url = url + 'title_text=' + title_text;
 					}
-					if (tag_id > 0 || title_text) {
+					if((tag_id>0 || title_text) && user_id) {
+						url = url + '&';
+					}
+					if (user_id > 0) {
+						url = url + 'user_id=' + user_id;
+					}
+					
+					if (tag_id > 0 || title_text || user_id > 0) {
 						$.ajax({
 							url: url,
 							data: {
