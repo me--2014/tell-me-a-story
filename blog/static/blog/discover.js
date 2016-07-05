@@ -15,12 +15,14 @@ export var App = React.createClass({
                         currentStoryList: [],
                         tagInput: 0,
                         textInput: "",
-						user: 0
+						user: 1
                     }
                 },
                 componentWillMount: function() {
+					var url = '/rest-api/stories/?user_id=' + this.state.user;
+					console.log("URL: " + url);
 					$.ajax({
-							url: '/rest-api/stories/',
+							url: url,
 							data: {
 								tagId: 0,
 								titleText: ""
@@ -50,7 +52,7 @@ export var App = React.createClass({
                     });
                 },
                 filter: function(tag_id, title_text) {
-					var user_id = 1;
+					var user_id = this.state.user;
 					var filteredList = [];
 					var url = '/rest-api/stories/'
 					if (tag_id > 0 || title_text || user_id > 0) {

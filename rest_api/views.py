@@ -15,14 +15,17 @@ class StoryViewSet(viewsets.ModelViewSet):
         def get_queryset(self):
             queryset = Story.objects.all().order_by('-dateposted').order_by('title')
 
+            # If tag id provided, filter by tag
             tagId = self.request.query_params.get('tag_id', None)
             if tagId is not None:
                 queryset = queryset.filter(tags__id=tagId)
 
+            # If snippet of text provided, filter by title
             titleText = self.request.query_params.get('title_text', None)
             if titleText is not None:
                 queryset = queryset.filter(title__icontains=titleText)
 
+            # If user provided, add is_fav field
             userId = self.request.query_params.get('user_id', None)
             if userId is not None:
                 favs_queryset = Favourite.objects.filter(user=userId);
@@ -34,6 +37,7 @@ class StoryViewSet(viewsets.ModelViewSet):
                         item.is_fav = True
                     else:
                         item.is_fav = False
+            print(unicode(queryset))
             return queryset
 
 class TagViewSet(viewsets.ModelViewSet):

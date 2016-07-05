@@ -10,10 +10,11 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 class StorySerializer(serializers.HyperlinkedModelSerializer):
     tags = serializers.HyperlinkedRelatedField(many=True, view_name='tag-detail', queryset=Tag.objects.all())
+    is_fav = serializers.BooleanField(required=False)
 
     class Meta:
         model = Story
-        fields = ('id', 'url', 'title', 'hook', 'storytext', 'dateposted', 'wordcount', 'author', 'tags')
+        fields = ('id', 'url', 'title', 'hook', 'storytext', 'dateposted', 'wordcount', 'author', 'tags', 'is_fav')
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
 
