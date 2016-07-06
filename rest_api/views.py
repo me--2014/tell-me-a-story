@@ -17,7 +17,7 @@ class StoryViewSet(viewsets.ModelViewSet):
 
             # If tag id provided, filter by tag
             tagId = self.request.query_params.get('tag_id', None)
-            if tagId is not None:
+            if tagId <> '0' and tagId is not None:
                 queryset = queryset.filter(tags__id=tagId)
 
             # If snippet of text provided, filter by title
@@ -27,7 +27,7 @@ class StoryViewSet(viewsets.ModelViewSet):
 
             # If user provided, add is_fav field
             userId = self.request.query_params.get('user_id', None)
-            if userId is not None:
+            if userId <> '0' and tagId is not None:
                 favs_queryset = Favourite.objects.filter(user=userId);
                 favs = set([])
                 for fav in favs_queryset:
@@ -37,7 +37,6 @@ class StoryViewSet(viewsets.ModelViewSet):
                         item.is_fav = True
                     else:
                         item.is_fav = False
-            print(unicode(queryset))
             return queryset
 
 class TagViewSet(viewsets.ModelViewSet):

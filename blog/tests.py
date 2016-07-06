@@ -3,12 +3,102 @@ Test suite for blog application. To run use command 'python manage.py test blog'
 Note: SimpleTestCase contains useful additional assert methods.
 """
 
-from django.test import TestCase
-from .models import Tag, Story, User
+from django.test import TestCase, SimpleTestCase
+from .models import Tag, Story, User, Favourite
 from datetime import date
 import json, collections
+from urllib import quote
 
 
+class checkStories(TestCase):
+    def setUp(self):
+        tag1 = Tag.objects.create(id=1, name="short")
+        tag1.save()
+        tag2 = Tag.objects.create(id=2, name="long")
+        tag2.save()
+        tag3 = Tag.objects.create(id=3, name="romantic")
+        tag3.save()
+
+        story1 = Story.objects.create(id=1, title="My first story", storytext="Once upon a time")
+        story1.save()
+        story1.tags.add(tag1, tag3)
+        story2 = Story.objects.create(id=2, title="My second story", storytext="Happy ever after")
+        story2.save()
+        story2.tags.add(tag2, tag3)
+        story3 = Story.objects.create(id=3, title="My third story", storytext="Three brown mice")
+        story3.save()
+        story3.tags.add(tag2)
+
+        user1 = User.objects.create(id=1, name="anon")
+        user1.save()
+
+        fav1 = Favourite.objects.create(id=1, story=story3, user=user1)
+        fav1.save()
+
+
+    def test_json_response_provided(self):
+        """
+        Check that different combinations of valid parameters result in a JSON response
+        """
+        encoded_string_first = quote("first")
+        encoded_string_story = quote("story")
+        encoded_string_ending = quote("ending")
+        query_strings_valid_filled = ['', 'user_id=0', 'user_id=1', 'tag_id=0', 'tag_id=1', 'title_text=' + encoded_string_first,
+                         'title_text=' + encoded_string_story, 'user_id=1&tag_id=2',
+                         'user_id=1&title_text=' + encoded_string_first, 'tag_id=3&title_text=' + encoded_string_story]
+        query_strings_valid_empty = ['user_id=2', 'tag_id=7', 'title_text=' + encoded_string_ending,
+                                     'user_id=99&tag_id=2', 'user_id=1&title_text=' + encoded_string_ending,
+                                     'tag_id=1000&title_text=' + encoded_string_story]
+
+        # Check query strings which should return a JSON response with content
+        url = '/rest-api/stories/'
+        json_response = self.client.get(url)
+        self.assertIsNotNone(json_response)
+        filled = False
+        if len(json_response.content) > 0:
+            filled = True
+        self.assertTrue(filled)
+
+        url = url + '?'
+        json_response = self.client.get(url)
+        self.assertIsNotNone(json_response)
+        filled = False
+        if len(json_response.content) > 0:
+            filled = True
+        self.assertTrue(filled)
+
+        for item in query_strings_valid_filled:
+            current_url = url + item
+            json_response = self.client.get(current_url)
+            self.assertIsNotNone(json_response)
+            filled = False
+            if len(json_response.content) > 0:
+                filled = True
+            self.assertTrue(filled)
+
+        # Check query strings which should return an empty JSON response
+        url = '/rest-api/stories/'
+        for item in query_strings_valid_empty:
+            current_url = url + item
+            json_response = self.client.get(current_url)
+            self.assertIsNotNone(json_response)
+            empty = False
+            if len(json_response.content) == 0:
+                empty = True
+            self.assertTrue(empty)
+
+        # Check invalid query strings
+
+        json_response = self.client.get('rest-api/stories/tag_id=2')  # Missing the '?' from start of querystring
+        self.assertEqual(json_response.status_code, 404)
+
+        with self.assertRaises(ValueError):
+            self.client.get('/rest-api/stories/?tag_id=1title_text=hello') # Missing the '&' between parameters
+
+        json_response = self.client.get('rest-api/stories/uesr_id=1') # Parameter name is misspelled
+        self.assertEqual(json_response.status_code, 404)
+
+"""
 class GeneralTests(TestCase):
 
     def setUp(self):
@@ -31,9 +121,7 @@ class GeneralTests(TestCase):
         user1.save()
 
     def test_header_on_every_page(self):
-        """
-        Check every page on the blog includes the stories filter widget
-        """
+
         discover = self.client.get('/')
         contact = self.client.get('/contact/')
         about = self.client.get('/about/')
@@ -66,9 +154,7 @@ class DiscoverTests(TestCase):
         user1.save()
 
     def test_order_stories(self):
-        """
-        Check that stories are displayed by date with most recent first
-        """
+
         response = self.client.get('/0/getTaggedStories/', HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         stories = json.loads(response.content, object_pairs_hook=collections.OrderedDict)
         fails = 0
@@ -83,10 +169,7 @@ class DiscoverTests(TestCase):
 
     def test_tag_filter_chooses_correct_stories(self):
 
-        """
-            Check that, if user filters stories by tag x, all stories with tag x are included in results.
-            @TODO: Could refactor using self.assertContains()
-        """
+
         no_stories_message = "There are no stories with that tag."
         fails = 0
         all_tags = Tag.objects.all()
@@ -119,3 +202,4 @@ class DiscoverTests(TestCase):
 
         self.assertEqual(fails, 0)
 
+"""
