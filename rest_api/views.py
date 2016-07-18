@@ -27,7 +27,7 @@ class StoryViewSet(viewsets.ModelViewSet):
 
             # If user provided, add is_fav field
             userId = self.request.query_params.get('user_id', None)
-            if userId <> '0' and tagId is not None:
+            if userId <> '0' and userId is not None:
                 favs_queryset = Favourite.objects.filter(user=userId);
                 favs = set([])
                 for fav in favs_queryset:

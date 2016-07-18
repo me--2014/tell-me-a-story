@@ -8,7 +8,21 @@ from .models import Tag, Story, User, Favourite
 from datetime import date
 import json, collections
 from urllib import quote
+from rest_framework.parsers import JSONParser
 
+encoded_string_first = quote("first")
+encoded_string_story = quote("story")
+encoded_string_ending = quote("ending")
+query_strings_valid_filled = ['', 'user_id=0', 'user_id=1', 'tag_id=0', 'tag_id=1',
+                              'title_text=' + encoded_string_first,
+                              'title_text=' + encoded_string_story, 'user_id=1&tag_id=2',
+                              'user_id=1&title_text=' + encoded_string_first,
+                              'tag_id=3&title_text=' + encoded_string_story]
+query_strings_valid_empty = ['user_id=2', 'tag_id=7', 'title_text=' + encoded_string_ending,
+                             'user_id=99&tag_id=2', 'user_id=1&title_text=' + encoded_string_ending,
+                             'tag_id=1000&title_text=' + encoded_string_story]
+query_strings_user = ['user_id=1', 'user_id=1&tag_id=2', 'user_id=1&title_text=' + encoded_string_first,
+                      'user_id=1&tag_id=2&title_text=' + encoded_string_story]
 
 class checkStories(TestCase):
     def setUp(self):
@@ -40,15 +54,6 @@ class checkStories(TestCase):
         """
         Check that different combinations of valid parameters result in a JSON response
         """
-        encoded_string_first = quote("first")
-        encoded_string_story = quote("story")
-        encoded_string_ending = quote("ending")
-        query_strings_valid_filled = ['', 'user_id=0', 'user_id=1', 'tag_id=0', 'tag_id=1', 'title_text=' + encoded_string_first,
-                         'title_text=' + encoded_string_story, 'user_id=1&tag_id=2',
-                         'user_id=1&title_text=' + encoded_string_first, 'tag_id=3&title_text=' + encoded_string_story]
-        query_strings_valid_empty = ['user_id=2', 'tag_id=7', 'title_text=' + encoded_string_ending,
-                                     'user_id=99&tag_id=2', 'user_id=1&title_text=' + encoded_string_ending,
-                                     'tag_id=1000&title_text=' + encoded_string_story]
 
         # Check query strings which should return a JSON response with content
         url = '/rest-api/stories/'
@@ -97,6 +102,75 @@ class checkStories(TestCase):
 
         json_response = self.client.get('rest-api/stories/uesr_id=1') # Parameter name is misspelled
         self.assertEqual(json_response.status_code, 404)
+
+    def test_response_contains_correct_headings(self):
+        """
+        Check that stories sent in the response contain headings such as id, title, dateposted, etc
+        """
+
+        # Check that Story model fields are included in the response
+        url = '/rest-api/stories/'
+        json_response = self.client.get(url)
+        self.assertContains(json_response, 'id')
+        self.assertContains(json_response, 'title')
+        self.assertContains(json_response, 'hook')
+        self.assertContains(json_response, 'storytext')
+        self.assertContains(json_response, 'dateposted')
+        self.assertContains(json_response, 'wordcount')
+        self.assertContains(json_response, 'author')
+        self.assertContains(json_response, 'tags')
+        url = url + '?'
+        for item in query_strings_valid_filled:
+            current_url = url + item
+            json_response = self.client.get(current_url)
+            self.assertContains(json_response, 'id')
+            self.assertContains(json_response, 'title')
+            self.assertContains(json_response, 'hook')
+            self.assertContains(json_response, 'storytext')
+            self.assertContains(json_response, 'dateposted')
+            self.assertContains(json_response, 'wordcount')
+            self.assertContains(json_response, 'author')
+            self.assertContains(json_response, 'tags')
+
+        # When a user is provided, check that is_fav field has been added
+        url = '/rest-api/stories/?'
+        for item in query_strings_user:
+            current_url = url + item
+            json_response = self.client.get(current_url)
+            self.assertContains(json_response, 'is_fav')
+
+    def test_no_id_duplicated(self):
+        """
+        Check that there are no duplicate story ids
+        """
+        url = '/rest-api/stories/'
+        json_response = self.client.get(url)
+        ids = []
+
+        for story in json_response.data:
+            ids.append(story['id'])
+
+        ids_set = []
+        failures = 0
+        for item in ids:
+            if item in ids_set:
+                failures += 1
+            ids_set.append(item)
+        self.assertEqual(failures, 0)
+
+    def test_order(self):
+        """
+        Check that stories are ordered by date then title
+        """
+        url = '/rest-api/stories/'
+        json_response = self.client.get(url)
+        story_dates = []
+
+        for story in json_response.data:
+            story_dates.append(story['dateposted'])
+
+        # Need to finish
+
 
 """
 class GeneralTests(TestCase):
