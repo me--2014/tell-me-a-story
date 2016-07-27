@@ -9,6 +9,8 @@ from datetime import date
 import json, collections
 from urllib import quote
 from rest_framework.parsers import JSONParser
+import datetime
+from operator import itemgetter
 
 encoded_string_first = quote("first")
 encoded_string_story = quote("story")
@@ -33,13 +35,13 @@ class checkStories(TestCase):
         tag3 = Tag.objects.create(id=3, name="romantic")
         tag3.save()
 
-        story1 = Story.objects.create(id=1, title="My first story", storytext="Once upon a time")
+        story1 = Story.objects.create(id=1, title="My first story", storytext="Once upon a time", dateposted="2010-12-19")
         story1.save()
         story1.tags.add(tag1, tag3)
-        story2 = Story.objects.create(id=2, title="My second story", storytext="Happy ever after")
+        story2 = Story.objects.create(id=2, title="My second story", storytext="Happy ever after", dateposted="2010-01-30")
         story2.save()
         story2.tags.add(tag2, tag3)
-        story3 = Story.objects.create(id=3, title="My third story", storytext="Three brown mice")
+        story3 = Story.objects.create(id=3, title="My third story", storytext="Three brown mice", dateposted="2010-01-30")
         story3.save()
         story3.tags.add(tag2)
 
@@ -167,9 +169,28 @@ class checkStories(TestCase):
         story_dates = []
 
         for story in json_response.data:
-            story_dates.append(story['dateposted'])
+            date_info = story['dateposted'].split('-')
+            date = datetime.date(int(date_info[0]), int(date_info[1]), int(date_info[2]))
+            title = story['title']
+            story_dates.append((date, title))
 
-        # Need to finish
+        print("Before sort:")
+        print(unicode(story_dates))
+
+        story_dates_ordered = sorted(story_dates, key=itemgetter(0), reverse=True)
+        story_dates_ordered = sorted(story_dates_ordered, key=itemgetter(1))
+        print("After sort:")
+        print(unicode(story_dates_ordered))
+
+        i = 0
+        failures = 0
+        for item in story_dates:
+            if item is not story_dates_ordered[i]:
+                failures += 1
+            i += 1
+
+        self.assertEqual(failures, 0)
+
 
 
 """
