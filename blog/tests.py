@@ -249,4 +249,10 @@ class CheckTags(TestCase):
         Check that there are no duplicate tag ids in the response
         """
 
-        # TO DO: add this test
+        url = '/rest-api/tags/'
+        json_response = self.client.get(url)
+        ids = []
+        for tag in json_response.data:
+            ids.append(tag['id'])
+        ids_set = set(ids)
+        self.assertEqual(len(ids), len(ids_set))
