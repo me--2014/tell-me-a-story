@@ -14,7 +14,7 @@ export var Featurespace = React.createClass({
 		}
         return(
             <div id="featureSpace" className="col-xs-8">
-                <h2>
+                <h2 id="story_header">
                     {this.props.story.title}
                     <span>    </span>
                     <span
@@ -33,10 +33,11 @@ export var Featurespace = React.createClass({
                     <button className="btn btn-primary btn-sm col-xs-2">
                         <span className="glyphicon glyphicon-headphones" aria-hidden="true"></span>  Download MP3
                     </button>
-                    <button className="btn btn-primary btn-sm col-xs-2">
+                    <button className="btn btn-primary btn-sm col-xs-2" onClick={this.props.pressedPlayButton}>
                         <span className="glyphicon glyphicon-play" aria-hidden="true"></span>  Play
                     </button>
                 </div>
+				<div id="audio_player"></div>
                 <div>{story_for_render}</div>
             </div>
         )

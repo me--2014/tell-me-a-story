@@ -246,6 +246,17 @@ var App = exports.App = React.createClass({
         });
         */
     },
+    pressedPlayButton: function pressedPlayButton(event) {
+        console.log("You pressed the PLAY button");
+        var audio_player = document.getElementById("audio_player");
+        if (!audio_player.hasChildNodes()) {
+            var audio_player_widget = document.createElement("audio");
+            audio_player_widget.setAttribute("controls", "controls");
+            audio_player_widget.setAttribute("src", "/static/blog/tester_for_TMAS.m4a");
+            audio_player_widget.textContent = "Sorry, your browser does not support the element which plays the audio file";
+            audio_player.appendChild(audio_player_widget);
+        }
+    },
 
     render: function render() {
 
@@ -270,7 +281,8 @@ var App = exports.App = React.createClass({
             }),
             React.createElement(Featurespace.Featurespace, {
                 story: this.state.selectedStory,
-                changeFavStatus: this.changeFavStatus
+                changeFavStatus: this.changeFavStatus,
+                pressedPlayButton: this.pressedPlayButton
             })
         );
     }
@@ -303,7 +315,7 @@ var Featurespace = exports.Featurespace = React.createClass({
             { id: 'featureSpace', className: 'col-xs-8' },
             React.createElement(
                 'h2',
-                null,
+                { id: 'story_header' },
                 this.props.story.title,
                 React.createElement(
                     'span',
@@ -335,11 +347,12 @@ var Featurespace = exports.Featurespace = React.createClass({
                 ),
                 React.createElement(
                     'button',
-                    { className: 'btn btn-primary btn-sm col-xs-2' },
+                    { className: 'btn btn-primary btn-sm col-xs-2', onClick: this.props.pressedPlayButton },
                     React.createElement('span', { className: 'glyphicon glyphicon-play', 'aria-hidden': 'true' }),
                     '  Play'
                 )
             ),
+            React.createElement('div', { id: 'audio_player' }),
             React.createElement(
                 'div',
                 null,

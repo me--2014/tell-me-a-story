@@ -128,7 +128,6 @@ export var App = React.createClass({
                         selectedStory.is_fav = false;
                     }
                     this.setState({currentStoryList: currentStoryList});
-					
 
                     /*
                     //Update server
@@ -146,6 +145,17 @@ export var App = React.createClass({
                     */
 
                 },
+				pressedPlayButton(event){
+					console.log("You pressed the PLAY button")
+					var audio_player = document.getElementById("audio_player")
+					if (!audio_player.hasChildNodes()) {
+						var audio_player_widget  = document.createElement("audio");
+						audio_player_widget.setAttribute("controls", "controls");
+						audio_player_widget.setAttribute("src", "/static/blog/tester_for_TMAS.m4a");
+						audio_player_widget.textContent = "Sorry, your browser does not support the element which plays the audio file";
+						audio_player.appendChild(audio_player_widget);
+					}
+				},
                 render: function() {
 					
 					for (var index in this.state.currentStoryList){
@@ -169,6 +179,7 @@ export var App = React.createClass({
                             <Featurespace.Featurespace
 								story={this.state.selectedStory}
                                 changeFavStatus = {this.changeFavStatus}
+								pressedPlayButton ={this.pressedPlayButton}
                             />
                         </div>
                     )
