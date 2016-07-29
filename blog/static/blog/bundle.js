@@ -98,194 +98,207 @@ process.umask = function() { return 0; };
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+	value: true
 });
 var React = require('react');
 var Sidebar = require('./sidebar');
 var Featurespace = require('./featurespace');
 
 var App = exports.App = React.createClass({
-    displayName: 'App',
+	displayName: 'App',
 
 
-    getInitialState: function getInitialState() {
-        var tagList = [];
-        return {
-            featureSpaceStoryId: 0,
-            selectedStory: {},
-            tagList: tagList,
-            placeholderText: "Start typing to search",
-            startingStoryList: [],
-            currentStoryList: [],
-            tagInput: 0,
-            textInput: "",
-            user: 1
-        };
-    },
-    componentWillMount: function componentWillMount() {
-        var _this = this;
+	getInitialState: function getInitialState() {
+		var tagList = [];
+		return {
+			featureSpaceStoryId: 0,
+			selectedStory: {},
+			tagList: tagList,
+			placeholderText: "Start typing to search",
+			startingStoryList: [],
+			currentStoryList: [],
+			tagInput: 0,
+			textInput: "",
+			user: 1
+		};
+	},
+	componentWillMount: function componentWillMount() {
+		var _this = this;
 
-        var url = '/rest-api/stories/?user_id=' + this.state.user;
-        console.log("URL: " + url);
-        $.ajax({
-            url: url,
-            data: {
-                tagId: 0,
-                titleText: ""
-            },
-            type: 'GET',
-            dataType: 'json'
-        }).done(function (response) {
-            _this.setState({ startingStoryList: response, currentStoryList: response });
-            _this.setState({ selectedStory: response[0] });
-        }).fail(function (xhr, status, err) {
-            console.error(status, String(err));
-        });
+		var url = '/rest-api/stories/?user_id=' + this.state.user;
+		console.log("URL: " + url);
+		$.ajax({
+			url: url,
+			data: {
+				tagId: 0,
+				titleText: ""
+			},
+			type: 'GET',
+			dataType: 'json'
+		}).done(function (response) {
+			_this.setState({ startingStoryList: response, currentStoryList: response });
+			_this.setState({ selectedStory: response[0] });
+		}).fail(function (xhr, status, err) {
+			console.error(status, String(err));
+		});
 
-        this.getTagList();
-    },
-    getTagList: function getTagList() {
-        $.ajax({
-            url: '/rest-api/tags/',
-            dataType: 'json',
-            success: function (data) {
-                this.setState({ tagList: data });
-            }.bind(this),
-            error: function (xhr, status, err) {
-                console.error(status, String(err));
-            }.bind(this)
-        });
-    },
-    filter: function filter(tag_id, title_text) {
-        var _this2 = this;
+		this.getTagList();
+	},
+	getTagList: function getTagList() {
+		$.ajax({
+			url: '/rest-api/tags/',
+			dataType: 'json',
+			success: function (data) {
+				this.setState({ tagList: data });
+			}.bind(this),
+			error: function (xhr, status, err) {
+				console.error(status, String(err));
+			}.bind(this)
+		});
+	},
+	filter: function filter(tag_id, title_text) {
+		var _this2 = this;
 
-        var user_id = this.state.user;
-        var filteredList = [];
-        var url = '/rest-api/stories/';
-        if (tag_id > 0 || title_text || user_id > 0) {
-            url = url + '?';
-        }
-        if (tag_id > 0) {
-            url = url + 'tag_id=' + tag_id;
-        }
-        if (tag_id > 0 && title_text) {
-            url = url + '&';
-        }
-        if (title_text) {
-            url = url + 'title_text=' + title_text;
-        }
-        if ((tag_id > 0 || title_text) && user_id) {
-            url = url + '&';
-        }
-        if (user_id > 0) {
-            url = url + 'user_id=' + user_id;
-        }
+		var user_id = this.state.user;
+		var filteredList = [];
+		var url = '/rest-api/stories/';
+		if (tag_id > 0 || title_text || user_id > 0) {
+			url = url + '?';
+		}
+		if (tag_id > 0) {
+			url = url + 'tag_id=' + tag_id;
+		}
+		if (tag_id > 0 && title_text) {
+			url = url + '&';
+		}
+		if (title_text) {
+			url = url + 'title_text=' + title_text;
+		}
+		if ((tag_id > 0 || title_text) && user_id) {
+			url = url + '&';
+		}
+		if (user_id > 0) {
+			url = url + 'user_id=' + user_id;
+		}
 
-        if (tag_id > 0 || title_text || user_id > 0) {
-            $.ajax({
-                url: url,
-                data: {
-                    tagId: tag_id,
-                    titleText: title_text
-                },
-                type: 'GET',
-                dataType: 'json'
-            }).done(function (response) {
-                filteredList = response;
-                _this2.setState({ currentStoryList: filteredList });
-            }).fail(function (xhr, status, err) {
-                console.error(status, String(err));
-            });
-        } else {
-            filteredList = this.state.startingStoryList;
-            this.setState({ currentStoryList: filteredList });
-        }
-    },
-    searchByTag: function searchByTag(event) {
-        var tag_id = event.target.id;
-        var title_text = this.state.textInput;
-        this.filter(tag_id, title_text);
-        this.setState({ tagInput: tag_id });
-    },
-    searchByTitle: function searchByTitle(event) {
-        var tag_id = this.state.tagInput;
-        var title_text = event.target.value;
-        this.filter(tag_id, title_text);
-        this.setState({ textInput: title_text });
-    },
-    chooseStory: function chooseStory(event) {
-        this.setState({ featureSpaceStoryId: event.target.id });
-    },
-    changeFavStatus: function changeFavStatus(event) {
+		if (tag_id > 0 || title_text || user_id > 0) {
+			$.ajax({
+				url: url,
+				data: {
+					tagId: tag_id,
+					titleText: title_text
+				},
+				type: 'GET',
+				dataType: 'json'
+			}).done(function (response) {
+				filteredList = response;
+				_this2.setState({ currentStoryList: filteredList });
+			}).fail(function (xhr, status, err) {
+				console.error(status, String(err));
+			});
+		} else {
+			filteredList = this.state.startingStoryList;
+			this.setState({ currentStoryList: filteredList });
+		}
+	},
+	searchByTag: function searchByTag(event) {
+		var tag_id = event.target.id;
+		var title_text = this.state.textInput;
+		this.filter(tag_id, title_text);
+		this.setState({ tagInput: tag_id });
+	},
+	searchByTitle: function searchByTitle(event) {
+		var tag_id = this.state.tagInput;
+		var title_text = event.target.value;
+		this.filter(tag_id, title_text);
+		this.setState({ textInput: title_text });
+	},
+	chooseStory: function chooseStory(event) {
+		this.setState({ featureSpaceStoryId: event.target.id });
+		this.removeAudioPlayer();
+	},
+	changeFavStatus: function changeFavStatus(event) {
 
-        var storyId = event.target.id;
-        var currentStoryList = this.state.currentStoryList;
-        for (var story in currentStoryList) {
-            if (currentStoryList[story].id === parseInt(storyId)) {
-                var selectedStory = currentStoryList[story];
-            }
-        }
-        if (selectedStory.is_fav === false) {
-            selectedStory.is_fav = true;
-        } else {
-            selectedStory.is_fav = false;
-        }
-        this.setState({ currentStoryList: currentStoryList });
+		var storyId = event.target.id;
+		var currentStoryList = this.state.currentStoryList;
+		for (var story in currentStoryList) {
+			if (currentStoryList[story].id === parseInt(storyId)) {
+				var selectedStory = currentStoryList[story];
+			}
+		}
+		if (selectedStory.is_fav === false) {
+			selectedStory.is_fav = true;
+		} else {
+			selectedStory.is_fav = false;
+		}
+		this.setState({ currentStoryList: currentStoryList });
 
-        /*
-        //Update server
-        var request = $.ajax({
-            method: 'POST',
-            url: '/blog/toggleFav/',
-            data: {userId: 1, story_id: storyId},
-            });
-        request.done(function(msg) {
-            //Do nothing
-        });
-        request.fail(function(jqXHR, textStatus) {
-            alert("Failed to save preference permanently:" + textStatus);
-        });
-        */
-    },
-    pressedPlayButton: function pressedPlayButton(event) {
-        var audio_player = document.getElementById("audio_player");
-        if (!audio_player.hasChildNodes()) {
-            var audio_player_widget = document.createElement("audio");
-            audio_player_widget.setAttribute("controls", "controls");
-            audio_player_widget.setAttribute("src", this.state.selectedStory['audiofile']);
-            audio_player_widget.textContent = "Sorry, your browser does not support the element which plays the audio file";
-            audio_player.appendChild(audio_player_widget);
-        }
-    },
+		/*
+  //Update server
+  var request = $.ajax({
+      method: 'POST',
+      url: '/blog/toggleFav/',
+      data: {userId: 1, story_id: storyId},
+      });
+  request.done(function(msg) {
+      //Do nothing
+  });
+  request.fail(function(jqXHR, textStatus) {
+      alert("Failed to save preference permanently:" + textStatus);
+  });
+  */
+	},
+	pressedPlayButton: function pressedPlayButton(event) {
+		var audio_player = document.getElementById("audio_player");
+		if (!audio_player.hasChildNodes()) {
+			var audio_player_widget = document.createElement("audio");
+			audio_player_widget.setAttribute("id", "audio_player_widget");
+			audio_player_widget.setAttribute("controls", "controls");
+			audio_player_widget.setAttribute("src", this.state.selectedStory['audiofile']);
+			audio_player_widget.textContent = "Sorry, your browser does not support the element which plays the audio file";
+			audio_player.appendChild(audio_player_widget);
+		}
+	},
+	removeAudioPlayer: function removeAudioPlayer() {
+		var audio_player = document.getElementById("audio_player");
+		if (audio_player.hasChildNodes()) {
+			var children = audio_player.childNodes;
+			for (var child in children) {
+				if (children[child].id === "audio_player_widget") {
+					audio_player.removeChild(children[child]);
+				}
+			};
+		}
+	},
 
-    render: function render() {
+	render: function render() {
 
-        for (var index in this.state.currentStoryList) {
-            if (this.state.currentStoryList[index].id == this.state.featureSpaceStoryId) {
-                this.state.selectedStory = this.state.currentStoryList[index];
-            }
-        };
+		for (var index in this.state.currentStoryList) {
+			if (this.state.currentStoryList[index].id == this.state.featureSpaceStoryId) {
+				this.state.selectedStory = this.state.currentStoryList[index];
+			}
+		};
 
-        return React.createElement(
-            'div',
-            { className: 'row' },
-            React.createElement(Sidebar.Sidebar, {
-                currentStoryList: this.state.currentStoryList,
-                searchByTitle: this.searchByTitle,
-                searchByTag: this.searchByTag,
-                tagList: this.state.tagList,
-                placeholderText: this.state.placeholderText,
-                chooseStory: this.chooseStory,
-                changeFavStatus: this.changeFavStatus,
-                tagInput: this.state.tagInput
-            }),
-            React.createElement(Featurespace.Featurespace, {
-                story: this.state.selectedStory,
-                changeFavStatus: this.changeFavStatus,
-                pressedPlayButton: this.pressedPlayButton
-            })
-        );
-    }
+		return React.createElement(
+			'div',
+			{ className: 'row' },
+			React.createElement(Sidebar.Sidebar, {
+				currentStoryList: this.state.currentStoryList,
+				searchByTitle: this.searchByTitle,
+				searchByTag: this.searchByTag,
+				tagList: this.state.tagList,
+				placeholderText: this.state.placeholderText,
+				chooseStory: this.chooseStory,
+				changeFavStatus: this.changeFavStatus,
+				tagInput: this.state.tagInput
+			}),
+			React.createElement(Featurespace.Featurespace, {
+				story: this.state.selectedStory,
+				changeFavStatus: this.changeFavStatus,
+				pressedPlayButton: this.pressedPlayButton
+			})
+		);
+	}
 });
 
 },{"./featurespace":3,"./sidebar":6,"react":165}],3:[function(require,module,exports){

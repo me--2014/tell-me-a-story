@@ -112,6 +112,7 @@ export var App = React.createClass({
                 },
                 chooseStory(event) {
                     this.setState({featureSpaceStoryId: event.target.id});
+					this.removeAudioPlayer();
                 },
                 changeFavStatus(event) {
 
@@ -150,10 +151,22 @@ export var App = React.createClass({
 					var audio_player = document.getElementById("audio_player")
 					if (!audio_player.hasChildNodes()) {
 						var audio_player_widget  = document.createElement("audio");
+						audio_player_widget.setAttribute("id", "audio_player_widget");
 						audio_player_widget.setAttribute("controls", "controls");
 						audio_player_widget.setAttribute("src", this.state.selectedStory['audiofile']);
 						audio_player_widget.textContent = "Sorry, your browser does not support the element which plays the audio file";
 						audio_player.appendChild(audio_player_widget);
+					}
+				},
+				removeAudioPlayer(){
+					var audio_player = document.getElementById("audio_player")
+					if (audio_player.hasChildNodes()) {
+						var children = audio_player.childNodes;
+						for (var child in children) {
+							if(children[child].id === "audio_player_widget") {
+								audio_player.removeChild(children[child]);
+							}
+						};
 					}
 				},
                 render: function() {
