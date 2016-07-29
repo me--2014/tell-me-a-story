@@ -33,8 +33,8 @@ export var Featurespace = React.createClass({
                     <button className="btn btn-primary btn-sm col-xs-2">
                         <span className="glyphicon glyphicon-headphones" aria-hidden="true"></span>  Download MP3
                     </button>
-                    <button className="btn btn-primary btn-sm col-xs-2" onClick={this.props.pressedPlayButton}>
-                        <span className="glyphicon glyphicon-play" aria-hidden="true"></span>  Play
+                    <button id="toggle_audio_button" className="btn btn-primary btn-sm col-xs-2" onClick={this.props.toggleAudioPlayer}>
+                        <span className="glyphicon glyphicon-play" aria-hidden="true"></span>  Audio Player
                     </button>
                 </div>
 				<div id="audio_player"></div>

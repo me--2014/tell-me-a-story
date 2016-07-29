@@ -112,7 +112,8 @@ export var App = React.createClass({
                 },
                 chooseStory(event) {
                     this.setState({featureSpaceStoryId: event.target.id});
-					this.removeAudioPlayer();
+					var audio_player = document.getElementById("audio_player")
+					this.removeAudioPlayerWidget(audio_player);
                 },
                 changeFavStatus(event) {
 
@@ -147,27 +148,41 @@ export var App = React.createClass({
                     */
 
                 },
-				pressedPlayButton(event){
+				toggleAudioPlayer(event){
 					var audio_player = document.getElementById("audio_player")
 					if (!audio_player.hasChildNodes()) {
-						var audio_player_widget  = document.createElement("audio");
-						audio_player_widget.setAttribute("id", "audio_player_widget");
-						audio_player_widget.setAttribute("controls", "controls");
-						audio_player_widget.setAttribute("src", this.state.selectedStory['audiofile']);
-						audio_player_widget.textContent = "Sorry, your browser does not support the element which plays the audio file";
-						audio_player.appendChild(audio_player_widget);
+						this.addAudioPlayerWidget(audio_player);
+					}
+					else {
+						this.removeAudioPlayerWidget(audio_player);
 					}
 				},
-				removeAudioPlayer(){
-					var audio_player = document.getElementById("audio_player")
-					if (audio_player.hasChildNodes()) {
-						var children = audio_player.childNodes;
-						for (var child in children) {
-							if(children[child].id === "audio_player_widget") {
-								audio_player.removeChild(children[child]);
-							}
-						};
-					}
+				addAudioPlayerWidget(audio_player){
+					var audio_player_widget  = document.createElement("audio");
+					audio_player_widget.setAttribute("id", "audio_player_widget");
+					audio_player_widget.setAttribute("controls", "controls");
+					audio_player_widget.setAttribute("src", this.state.selectedStory['audiofile']);
+					audio_player_widget.textContent = "Sorry, your browser does not support the element which plays the audio file";
+					audio_player.appendChild(audio_player_widget);
+					var audio_player_closebutton = document.createElement("button");
+					audio_player_closebutton.setAttribute("id", "close_button");
+					audio_player_closebutton.textContent = "x";
+					audio_player.appendChild(audio_player_closebutton);
+					document.getElementById("toggle_audio_button").textContent = "  Hide Audio Player";
+				},
+				removeAudioPlayerWidget(audio_player){
+					var children = audio_player.childNodes;
+					for (var child in children) {
+						if(children[child].id === "audio_player_widget") {
+							audio_player.removeChild(children[child]);
+						}
+					};
+					for (var child in children) { // Use separate loop because removing children during looping changes the parameters of the loop
+						if(children[child].id === "close_button") {
+							audio_player.removeChild(children[child]);
+						}
+					};
+					document.getElementById("toggle_audio_button").textContent = "  Audio Player";
 				},
                 render: function() {
 					
@@ -192,7 +207,7 @@ export var App = React.createClass({
                             <Featurespace.Featurespace
 								story={this.state.selectedStory}
                                 changeFavStatus = {this.changeFavStatus}
-								pressedPlayButton ={this.pressedPlayButton}
+								toggleAudioPlayer ={this.toggleAudioPlayer}
                             />
                         </div>
                     )
