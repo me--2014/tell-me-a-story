@@ -17,6 +17,7 @@ class Story(models.Model):
     wordcount = models.IntegerField(blank=True, null=True)
     author = models.CharField(max_length=255, blank=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True)
+    audiofile = models.CharField(max_length=255, null=True)
 
     def __str__(self):
         return self.title

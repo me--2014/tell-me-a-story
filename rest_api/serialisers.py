@@ -14,7 +14,8 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Story
-        fields = ('id', 'url', 'title', 'hook', 'storytext', 'dateposted', 'wordcount', 'author', 'tags', 'is_fav')
+        fields = ('id', 'url', 'title', 'hook', 'storytext', 'dateposted', 'wordcount', 'author', 'tags', 'is_fav',
+                  'audiofile')
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
 
